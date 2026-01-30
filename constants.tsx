@@ -2,7 +2,7 @@
 import React from 'react';
 import {
   ShieldAlert, Video, LayoutDashboard, Activity, Send,
-  FileBarChart, Lock, Settings, BookOpen
+  FileBarChart, Lock, Settings, BookOpen, TrendingUp
 } from 'lucide-react';
 
 export const COLORS = {
@@ -20,11 +20,17 @@ export const NAVIGATION_ITEMS = [
   { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard size={20} /> },
   { name: 'Camera Health', path: '/health', icon: <Activity size={20} /> },
   { name: 'Incidents', path: '/incidents', icon: <ShieldAlert size={20} /> },
+  { name: 'Incident Forecasting', path: '/forecasting', icon: <TrendingUp size={20} /> },
   { name: 'Emergency Dispatch', path: '/dispatch', icon: <Send size={20} /> },
   { name: 'Analytics', path: '/analytics', icon: <FileBarChart size={20} /> },
   { name: 'Evidence Vault', path: '/vault', icon: <Lock size={20} /> },
   { name: 'Settings', path: '/settings', icon: <Settings size={20} /> },
-  { name: 'Documentation', path: '/docs', icon: <BookOpen size={20} /> },
+];
+
+export const OFFICIAL_NAVIGATION_ITEMS = [
+  { name: 'Requests', path: '/official/requests', icon: <Activity size={20} /> },
+  { name: 'Service Metrics', path: '/official/analytics', icon: <FileBarChart size={20} /> },
+  { name: 'Settings', path: '/settings', icon: <Settings size={20} /> },
 ];
 
 // India States with center coordinates

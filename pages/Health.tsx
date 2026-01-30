@@ -1,7 +1,13 @@
+
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { Wifi, AlertTriangle, MapPin, Thermometer, Cpu, Activity, CheckCircle, XCircle, RefreshCw, Navigation, Phone } from 'lucide-react';
+import { OfficialTask } from '../types';
+
+interface HealthProps {
+  onSendToOfficial?: (task: Omit<OfficialTask, 'status' | 'assignedAt'>) => void;
+}
 
 // Fix for default marker icons in React-Leaflet
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -88,7 +94,6 @@ const createCameraIcon = (status: CameraStatus, isSelected: boolean) => {
   if (status === 'defected') color = '#DC2626'; // defected - Red
 
   if (isSelected) {
-    // Keep base color but add stronger glow and size
     const size = 36;
     return L.divIcon({
       className: 'custom-camera-marker-selected',
@@ -155,7 +160,7 @@ const MapController: React.FC<{ center: [number, number]; zoom: number; triggerK
   return null;
 };
 
-const Health: React.FC = () => {
+const Health: React.FC<HealthProps> = ({ onSendToOfficial }) => {
   const [selectedState, setSelectedState] = useState<string>('Karnataka');
   const [selectedDistrict, setSelectedDistrict] = useState<string>('Bangalore Urban');
   const [cameras, setCameras] = useState(generateCamerasForLocation('Karnataka', 'Bangalore Urban'));
@@ -198,15 +203,28 @@ const Health: React.FC = () => {
     setMapTriggerKey(prev => prev + 1);
   };
 
-  const handleInformPolice = (cameraId: string) => {
-    setNotification({ show: true, cameraId });
+  const handleInformPolice = (cam: typeof cameras[0]) => {
+    setNotification({ show: true, cameraId: cam.id });
+
+    // Dispatch to official if callback exists
+    if (onSendToOfficial) {
+      onSendToOfficial({
+        id: `TASK-${Date.now()}`,
+        cameraId: cam.id,
+        cameraName: cam.name,
+        location: { lat: cam.lat, lng: cam.lng },
+        type: 'repair'
+      });
+    }
+
     setCameras(prev => {
-      const remaining = prev.filter(c => c.id !== cameraId);
-      if (selectedCam.id === cameraId && remaining.length > 0) {
+      const remaining = prev.filter(c => c.id !== cam.id);
+      if (selectedCam.id === cam.id && remaining.length > 0) {
         setSelectedCam(remaining[0]);
       }
       return remaining;
     });
+
     setTimeout(() => {
       setNotification({ show: false, cameraId: '' });
     }, 2500);
@@ -220,9 +238,9 @@ const Health: React.FC = () => {
             <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-biolumeGreen/20 flex items-center justify-center">
               <CheckCircle size={48} className="text-biolumeGreen" />
             </div>
-            <h3 className="text-2xl font-bold mb-2 text-biolumeGreen text-center">Police Informed!</h3>
-            <p className="text-gray-400 text-center">Camera <span className="text-white font-bold">{notification.cameraId}</span> reported.</p>
-            <p className="text-[10px] text-gray-500 mt-4 tracking-widest font-black uppercase text-center">NODE REMOVED FROM TRACKING GRID</p>
+            <h3 className="text-2xl font-bold mb-2 text-biolumeGreen">Police Informed!</h3>
+            <p className="text-gray-400">Camera <span className="text-white font-bold">{notification.cameraId}</span> reported.</p>
+            <p className="text-[10px] text-gray-500 mt-4 tracking-widest font-black uppercase">NODE REMOVED FROM TRACKING GRID</p>
           </div>
         </div>
       )}
@@ -260,8 +278,8 @@ const Health: React.FC = () => {
                   key={cam.id}
                   onClick={() => handleCameraSelect(cam)}
                   className={`w-full text-left p-4 rounded-2xl border transition-all duration-300 ${selectedCam.id === cam.id
-                    ? 'bg-electricTeal/10 border-electricTeal shadow-[0_0_20px_rgba(0,232,255,0.1)]'
-                    : 'bg-obsidian/50 border-white/5 hover:bg-obsidian/80'
+                      ? 'bg-electricTeal/10 border-electricTeal shadow-[0_0_20px_rgba(0,232,255,0.1)]'
+                      : 'bg-obsidian/50 border-white/5 hover:bg-obsidian/80'
                     }`}
                 >
                   <div className="flex justify-between items-center mb-1">
@@ -359,7 +377,7 @@ const Health: React.FC = () => {
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleInformPolice(cam.id);
+                            handleInformPolice(cam);
                           }}
                           className="w-full py-3 bg-red-600 hover:bg-red-700 text-white text-[10px] font-black uppercase tracking-widest rounded-lg flex items-center justify-center gap-2 transition-all shadow-lg"
                         >

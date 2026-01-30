@@ -21,10 +21,10 @@ const Home: React.FC<HomeProps> = ({ appMode, setAppMode }) => {
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-electricTeal/10 border border-electricTeal/20 text-electricTeal text-xs font-bold uppercase tracking-widest mb-6">
             <Cpu size={14} /> AI Powered Surveillance
           </div>
-          <h2 className="text-5xl lg:text-7xl font-extrabold mb-6 leading-tight">
-            Seeing Smarter: <br />
+          <h2 className="text-5xl lg:text-7xl font-black mb-6 leading-tight uppercase italic tracking-tighter">
+            Cogni<span className="text-electricTeal">Cam</span>: <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-electricTeal to-biolumeGreen">
-              Intelligence from Data
+              Vision Intelligence
             </span>
           </h2>
           <p className="text-gray-400 text-lg max-w-2xl">
@@ -37,25 +37,23 @@ const Home: React.FC<HomeProps> = ({ appMode, setAppMode }) => {
             <div className="flex-1">
               <h3 className="text-2xl font-bold mb-4">Command Module</h3>
               <p className="text-gray-400 mb-8">Select your operational environment to begin processing assets.</p>
-              
+
               <div className="flex items-center p-2 bg-obsidian rounded-2xl w-fit border border-white/10">
                 <button
                   onClick={() => setAppMode('archive')}
-                  className={`px-8 py-3 rounded-xl transition-all font-bold ${
-                    appMode === 'archive' 
-                    ? 'bg-electricTeal text-obsidian shadow-[0_0_20px_rgba(0,232,255,0.4)]' 
-                    : 'text-gray-500 hover:text-white'
-                  }`}
+                  className={`px-8 py-3 rounded-xl transition-all font-bold ${appMode === 'archive'
+                      ? 'bg-electricTeal text-obsidian shadow-[0_0_20px_rgba(0,232,255,0.4)]'
+                      : 'text-gray-500 hover:text-white'
+                    }`}
                 >
                   Archive Upload
                 </button>
                 <button
                   onClick={() => setAppMode('live')}
-                  className={`px-8 py-3 rounded-xl transition-all font-bold ${
-                    appMode === 'live' 
-                    ? 'bg-neonCrimson text-white shadow-[0_0_20px_rgba(255,31,138,0.4)]' 
-                    : 'text-gray-500 hover:text-white'
-                  }`}
+                  className={`px-8 py-3 rounded-xl transition-all font-bold ${appMode === 'live'
+                      ? 'bg-neonCrimson text-white shadow-[0_0_20px_rgba(255,31,138,0.4)]'
+                      : 'text-gray-500 hover:text-white'
+                    }`}
                 >
                   Live Feed
                 </button>
